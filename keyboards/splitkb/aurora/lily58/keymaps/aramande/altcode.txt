@@ -1,0 +1,54 @@
+/* Add this to keymap.c before compiling to enable special bindings for EurKey letters */
+void send_alt_code_P(const uint16_t str) {
+    uint8_t     lshift   = keyboard_report->mods & MOD_BIT(KC_LSFT);
+    uint8_t     rshift   = keyboard_report->mods & MOD_BIT(KC_RSFT);
+    SEND_STRING(SS_DOWN(X_RALT));
+    SEND_STRING(SS_DOWN(str));
+    SEND_STRING(SS_UP(str));
+    SEND_STRING(SS_UP(X_RALT));
+    wait_ms(15); // seems to be necessary when sending two alt-codes one next to the other. 9ms was sufficient on my system
+}
+
+#define SEND_ALT_CODE(string) send_alt_code_P(string)
+
+enum custom_keycodes {
+    QMKBEST = SAFE_RANGE,
+    QMKURL,
+    ARING,
+    OUML,
+    AUML,
+    EHAT
+    // AHAT,
+    // EHAT,
+    // IHAT,
+    // OHAT,
+    // UHAT,
+    // UEYES,
+    // NHAT,
+};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        case EHAT:
+            if (record->event.pressed) {
+                SEND_ALT_CODE(X_G);
+            }
+            break;
+        case ARING:
+            if (record->event.pressed) {
+                SEND_ALT_CODE(X_W);
+            }
+            break;
+        case OUML:
+            if (record->event.pressed) {
+                SEND_ALT_CODE(X_O);
+            }
+            break;
+        case AUML:
+            if (record->event.pressed) {
+                SEND_ALT_CODE(X_A);
+            }
+            break;
+    }
+    return true;
+}
